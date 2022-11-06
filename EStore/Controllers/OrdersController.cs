@@ -2,12 +2,14 @@
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EStore.Controllers
 {
     public class OrdersController : Controller
     {
         IOrderRepository orderRepository = new OrderRepository();
+        IMemberRepository memberRepository = new MemberRepository();
 
         // GET: OrdersController
         public ActionResult Index()
@@ -27,6 +29,7 @@ namespace EStore.Controllers
         // GET: OrdersController/Create
         public ActionResult Create()
         {
+            ViewBag.MemberId = getMemberList();
             return View();
         }
 
@@ -37,14 +40,14 @@ namespace EStore.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                    orderRepository.Insert(order);
+                orderRepository.Insert(order);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                ViewBag.MemberId = getMemberList();
                 ViewBag.Message = ex.Message;
-                return View();
+                return View(order);
             }
         }
 
@@ -54,6 +57,8 @@ namespace EStore.Controllers
             var order = orderRepository.GetById(id);
             if (order == null)
                 return NotFound();
+
+            ViewBag.MemberId = getMemberList();
             return View(order);
         }
 
@@ -64,17 +69,15 @@ namespace EStore.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    order.OrderId = id;
-                    orderRepository.Update(order);
-                }
+                order.OrderId = id;
+                orderRepository.Update(order);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                ViewBag.MemberId = getMemberList();
                 ViewBag.Message = ex.Message;
-                return View();
+                return View(order);
             }
         }
 
@@ -84,13 +87,13 @@ namespace EStore.Controllers
             var order = orderRepository.GetById(id);
             if (order == null)
                 return NotFound();
-            return View();
+            return View(order);
         }
 
         // POST: OrdersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Order order)
         {
             try
             {
@@ -100,8 +103,14 @@ namespace EStore.Controllers
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View();
+                return View(order);
             }
+        }
+
+        private IEnumerable<SelectListItem> getMemberList()
+        {
+            return memberRepository.GetAll()
+                .Select(m => new SelectListItem(m.Email, m.MemberId.ToString()));
         }
     }
 }

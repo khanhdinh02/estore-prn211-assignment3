@@ -5,102 +5,102 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EStore.Controllers
 {
-    public class MembersController : Controller
+    public class ProductsController : Controller
     {
-        IMemberRepository memberRepository = new MemberRepository();
+        IProductRepository productRepository = new ProductRepository();
 
-        // GET: MembersController
+        // GET: ProductsController
         public ActionResult Index()
         {
-            return View(memberRepository.GetAll());
+            return View(productRepository.GetAll());
         }
 
-        // GET: MembersController/Details/5
+        // GET: ProductsController/Details/5
         public ActionResult Details(int id)
         {
-            var member = memberRepository.GetById(id);
-            if (member == null)
+            var product = productRepository.GetById(id);
+            if (product == null)
                 return NotFound();
-            return View(member);
+            return View(product);
         }
 
-        // GET: MembersController/Create
+        // GET: ProductsController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: MembersController/Create
+        // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Member member)
+        public ActionResult Create(Product product)
         {
             try
             {
                 if (ModelState.IsValid)
-                    memberRepository.Insert(member);
+                    productRepository.Insert(product);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View(member);
+                return View();
             }
         }
 
-        // GET: MembersController/Edit/5
+        // GET: ProductsController/Edit/5
         public ActionResult Edit(int id)
         {
-            var member = memberRepository.GetById(id);
-            if (member == null)
+            var product = productRepository.GetById(id);
+            if (product == null)
                 return NotFound();
-            return View(member);
+            return View(product);
         }
 
-        // POST: MembersController/Edit/5
+        // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Member member)
+        public ActionResult Edit(int id, Product product)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    member.MemberId = id;
-                    memberRepository.Update(member);
+                    product.ProductId = id;
+                    productRepository.Update(product);
                 }
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View(member);
+                return View();
             }
         }
 
-        // GET: MembersController/Delete/5
+        // GET: ProductsController/Delete/5
         public ActionResult Delete(int id)
         {
-            var member = memberRepository.GetById(id);
-            if (member == null)
+            var product = productRepository.GetById(id);
+            if (product == null)
                 return NotFound();
-            return View(member);
+            return View(product);
         }
 
-        // POST: MembersController/Delete/5
+        // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Member member)
+        public ActionResult Delete(int id, Product product)
         {
             try
             {
-                memberRepository.Remove(id);
+                productRepository.Remove(id);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View(member);
+                return View();
             }
         }
     }
