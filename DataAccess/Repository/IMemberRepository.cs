@@ -15,5 +15,6 @@ namespace DataAccess.Repository
         void Update(Member member);
         void Remove(int id);
         Member? GetByEmail(string email);
+        public Member Login(string email, string password);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessObject;
+using Microsoft.Extensions.Configuration;
 using System.Diagnostics.Metrics;
 
 namespace DataAccess
@@ -24,6 +25,7 @@ namespace DataAccess
         {
             using var context = new FStoreContext();
             List<Member> list = context.Members.ToList();
+            list = list.Append(GetDefaultMember()).ToList();
             return list;
         }
 
@@ -68,6 +70,51 @@ namespace DataAccess
             using var context = new FStoreContext();
             context.Members.Remove(member);
             context.SaveChanges();
+        }
+
+        public Member Login(string email, string password)
+        {
+            Member member = null;
+            try
+            {
+                IEnumerable<Member> members = GetAll();
+                member = members.SingleOrDefault(mb => mb.Email.Equals(email) && mb.Password.Equals(password));
+                if (member == null)
+                {
+                    throw new Exception("Login failed! Please check your email and password!!");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return member;
+        }
+
+        public Member GetDefaultMember()
+        {
+            Member Default = null;
+            using (StreamReader r = new StreamReader("appsettings.json"))
+            {
+                string json = r.ReadToEnd();
+                IConfiguration config = new ConfigurationBuilder()
+                                        .SetBasePath(Directory.GetCurrentDirectory())
+                                        .AddJsonFile("appsettings.json", true, true)
+                                        .Build();
+                string email = config["account:defaultAccount:email"];
+                string password = config["account:defaultAccount:password"];
+                Default = new Member
+                {
+                    MemberId = 0,
+                    Email = email,
+                    CompanyName = "",
+                    City = "",
+                    Country = "",
+                    Password = password,
+                };
+            }
+            return Default;
         }
     }
 }
