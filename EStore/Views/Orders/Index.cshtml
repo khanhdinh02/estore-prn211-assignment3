@@ -28,6 +28,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Member)
             </th>
+            <th>OrderDetail</th>
             <th></th>
         </tr>
     </thead>
@@ -50,6 +51,9 @@
                 <a asp-controller="Members" asp-action="Details" asp-route-id="@item.MemberId">
                     @Html.DisplayFor(modelItem => item.Member.Email)
                 </a>
+            </td>
+            <td>
+                <a asp-controller="OrderDetails" asp-action="Index" asp-route-orderId="@item.OrderId">View</a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |

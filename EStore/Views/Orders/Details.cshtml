@@ -43,6 +43,9 @@
                 @Html.DisplayFor(model => model.Member.Email)
             </a>
         </dd>
+        <dt class="col-sm-2">
+            <a asp-controller="OrderDetails" asp-action="Index" asp-route-orderId="@Model?.OrderId" class="btn btn-info">OrderDetail</a>
+        </dt>
     </dl>
 </div>
 <div>

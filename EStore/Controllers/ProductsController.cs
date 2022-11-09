@@ -44,7 +44,7 @@ namespace EStore.Controllers
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View();
+                return View(product);
             }
         }
 
@@ -74,7 +74,7 @@ namespace EStore.Controllers
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View();
+                return View(product);
             }
         }
 
@@ -100,7 +100,7 @@ namespace EStore.Controllers
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
-                return View();
+                return View(product);
             }
         }
     }

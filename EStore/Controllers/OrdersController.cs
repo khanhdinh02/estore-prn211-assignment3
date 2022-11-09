@@ -29,7 +29,7 @@ namespace EStore.Controllers
         // GET: OrdersController/Create
         public ActionResult Create()
         {
-            ViewBag.MemberId = getMemberList();
+            ViewBag.MemberId = GetMemberList();
             return View();
         }
 
@@ -45,7 +45,7 @@ namespace EStore.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.MemberId = getMemberList();
+                ViewBag.MemberId = GetMemberList();
                 ViewBag.Message = ex.Message;
                 return View(order);
             }
@@ -58,7 +58,7 @@ namespace EStore.Controllers
             if (order == null)
                 return NotFound();
 
-            ViewBag.MemberId = getMemberList();
+            ViewBag.MemberId = GetMemberList();
             return View(order);
         }
 
@@ -75,7 +75,7 @@ namespace EStore.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.MemberId = getMemberList();
+                ViewBag.MemberId = GetMemberList();
                 ViewBag.Message = ex.Message;
                 return View(order);
             }
@@ -107,7 +107,7 @@ namespace EStore.Controllers
             }
         }
 
-        private IEnumerable<SelectListItem> getMemberList()
+        private IEnumerable<SelectListItem> GetMemberList()
         {
             return memberRepository.GetAll()
                 .Select(m => new SelectListItem(m.Email, m.MemberId.ToString()));

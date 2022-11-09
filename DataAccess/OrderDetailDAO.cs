@@ -45,6 +45,9 @@ namespace DataAccess
         {
             if (GetById(orderDetail.OrderId, orderDetail.ProductId) != null)
                 throw new Exception("OrderDetail has existed");
+            orderDetail.UnitPrice = ProductDAO.Instance
+                .GetById(orderDetail.ProductId)!
+                .UnitPrice;
             using var context = new FStoreContext();
             context.OrderDetails.Add(orderDetail);
             context.SaveChanges();
@@ -54,6 +57,9 @@ namespace DataAccess
         {
             if (GetById(orderDetail.OrderId, orderDetail.ProductId) == null)
                 throw new Exception("OrderDetail does not exist");
+            orderDetail.UnitPrice = ProductDAO.Instance
+                .GetById(orderDetail.ProductId)!
+                .UnitPrice;
             using var context = new FStoreContext();
             context.OrderDetails.Update(orderDetail);
             context.SaveChanges();
@@ -69,21 +75,24 @@ namespace DataAccess
             context.SaveChanges();
         }
 
-        internal IEnumerable<OrderDetail> GetBetweenDays(DateTime from, DateTime to)
+        public IEnumerable<OrderDetail> GetBetweenDays(DateTime from, DateTime to)
         {
             using var context = new FStoreContext();
             return context.OrderDetails
                 .Include(d => d.Order)
-                .Where(d => from.CompareTo(d.Order.OrderDate) <= 0 && d.Order.OrderDate.CompareTo(to) <= 0);
+                .Include(d => d.Product)
+                .Where(d => from.CompareTo(d.Order.OrderDate) <= 0 && d.Order.OrderDate.CompareTo(to) <= 0)
+                .ToList();
         }
 
-        internal IEnumerable<OrderDetail> GetByOrderId(int orderId)
+        public IEnumerable<OrderDetail> GetByOrderId(int orderId)
         {
             using var context = new FStoreContext();
             return context.OrderDetails
                 .Include(I => I.Order)
                 .Include(i => i.Product)
-                .Where(d => orderId == d.OrderId);
+                .Where(d => orderId == d.OrderId)
+                .ToList();
         }
     }
 }
