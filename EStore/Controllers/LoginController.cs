@@ -29,14 +29,7 @@ namespace eStore.Controllers
 
                 if (loginMember != null)
                 {
-                    if(loginMember.MemberId == 0)
-                    {
-                        HttpContext.Session.SetInt32("RoleID", 0);
-                    }
-                    else
-                    {
-                        HttpContext.Session.SetInt32("RoleID", 1);
-                    }
+                        HttpContext.Session.SetInt32("MemberId", loginMember.MemberId);
                 }
                 
                 return RedirectToAction("Index", "Members");

@@ -25,7 +25,6 @@ namespace DataAccess
         {
             using var context = new FStoreContext();
             List<Member> list = context.Members.ToList();
-            list = list.Append(GetDefaultMember()).ToList();
             return list;
         }
 
@@ -74,10 +73,10 @@ namespace DataAccess
 
         public Member Login(string email, string password)
         {
-            Member member = null;
+            Member? member = null;
             try
             {
-                IEnumerable<Member> members = GetAll();
+                IEnumerable<Member> members = GetAll().Append(GetDefaultMember());
                 member = members.SingleOrDefault(mb => mb.Email.Equals(email) && mb.Password.Equals(password));
                 if (member == null)
                 {
