@@ -1,5 +1,6 @@
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession();
-
+    
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");
