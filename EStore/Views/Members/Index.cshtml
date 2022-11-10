@@ -7,9 +7,12 @@
 
 <h1>Index</h1>
 
+@if (int.Equals(Context.Session.GetInt32("MemberId"), 0))
+{
 <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>    
+}
 <table class="table">
     <thead>
         <tr>
@@ -50,9 +53,11 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.MemberId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.MemberId">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.MemberId">Edit</a> |
+    @if (int.Equals(Context.Session.GetInt32("MemberId"), 0)) {
                 <a asp-action="Delete" asp-route-id="@item.MemberId">Delete</a>
+    }
             </td>
         </tr>
 }

@@ -7,9 +7,12 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create" asp-route-orderId="@ViewBag.OrderId">Create New</a>
-</p>
+@if (int.Equals(Context.Session.GetInt32("MemberId"), 0))
+{
+    <p>
+        <a asp-action="Create" asp-route-orderId="@ViewBag.OrderId">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -40,9 +43,14 @@
                 </a>
             </td>
             <td>
+            @if (int.Equals(Context.Session.GetInt32("MemberId"), 0)) {
                 <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
                     @Html.DisplayFor(modelItem => item.Product.ProductName)
                 </a>
+            }
+            else {
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UnitPrice)
@@ -54,9 +62,13 @@
                 @Html.DisplayFor(modelItem => item.Discount)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Edit</a> |
                 <a asp-action="Details" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Delete</a>
+            @if (int.Equals(Context.Session.GetInt32("MemberId"), 0)) {
+                <text>
+                    <a asp-action="Edit" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Edit</a> |
+                    <a asp-action="Delete" asp-route-orderId="@item.OrderId" asp-route-productId="@item.ProductId">Delete</a>
+                </text>
+            }
             </td>
         </tr>
 }

@@ -49,6 +49,11 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.OrderId">Edit</a> |
+    @if (int.Equals(Context.Session.GetInt32("MemberId"), 0))
+    {
+        <text>
+            <a asp-action="Edit" asp-route-id="@Model?.OrderId">Edit</a> |
+        </text>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

@@ -23,9 +23,14 @@
             @Html.DisplayNameFor(model => model.Product)
         </dt>
         <dd class="col-sm-10">
+        @if (int.Equals(Context.Session.GetInt32("MemberId"), 0)) {
             <a asp-controller="Products" asp-action="Details" asp-route-id="@Model?.ProductId">
                 @Html.DisplayFor(model => model.Product.ProductName)
             </a>
+        }
+        else {
+            @Html.DisplayFor(model => model.Product.ProductName)
+        }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UnitPrice)
@@ -48,6 +53,10 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-orderId="@Model?.OrderId" asp-route-productId="@Model?.ProductId">Edit</a> |
+@if (int.Equals(Context.Session.GetInt32("MemberId"), 0)) {
+    <text>
+        <a asp-action="Edit" asp-route-orderId="@Model?.OrderId" asp-route-productId="@Model?.ProductId">Edit</a> |
+    </text>
+}
     <a asp-action="Index" asp-route-orderId="@Model?.OrderId">Back to List</a>
 </div>

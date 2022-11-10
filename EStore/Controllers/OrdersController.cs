@@ -14,7 +14,12 @@ namespace EStore.Controllers
         // GET: OrdersController
         public ActionResult Index()
         {
-            return View(orderRepository.GetAll());
+            var memberId = HttpContext.Session.GetInt32("MemberId");
+            if (memberId == null)
+                return RedirectToAction("Index", "Login");
+            if (memberId == 0)
+                return View(orderRepository.GetAll());
+            return View(orderRepository.GetByMemberId(memberId.Value));
         }
 
         // GET: OrdersController/Details/5

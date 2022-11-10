@@ -12,7 +12,12 @@ namespace EStore.Controllers
         // GET: MembersController
         public ActionResult Index()
         {
-            return View(memberRepository.GetAll());
+            var memberId = HttpContext.Session.GetInt32("MemberId");
+            if (memberId == null)
+                return RedirectToAction("Index", "Login");
+            if (memberId == 0)
+                return View(memberRepository.GetAll());
+            return View(memberRepository.GetAll().Where(m => m.MemberId == memberId));
         }
 
         // GET: MembersController/Details/5
