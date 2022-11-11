@@ -2,12 +2,14 @@
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace EStore.Controllers
 {
     public class MembersController : Controller
     {
-        IMemberRepository memberRepository = new MemberRepository();
+        private IMemberRepository memberRepository = new MemberRepository();
 
         // GET: MembersController
         public ActionResult Index()
@@ -32,6 +34,7 @@ namespace EStore.Controllers
         // GET: MembersController/Create
         public ActionResult Create()
         {
+            ViewBag.Country = GetCountryList();
             return View();
         }
 
@@ -48,6 +51,7 @@ namespace EStore.Controllers
             }
             catch (Exception ex)
             {
+                ViewBag.Country = GetCountryList();
                 ViewBag.Message = ex.Message;
                 return View(member);
             }
@@ -59,6 +63,8 @@ namespace EStore.Controllers
             var member = memberRepository.GetById(id);
             if (member == null)
                 return NotFound();
+
+            ViewBag.Country = GetCountryList();
             return View(member);
         }
 
@@ -78,6 +84,7 @@ namespace EStore.Controllers
             }
             catch (Exception ex)
             {
+                ViewBag.Country = GetCountryList();
                 ViewBag.Message = ex.Message;
                 return View(member);
             }
@@ -107,6 +114,18 @@ namespace EStore.Controllers
                 ViewBag.Message = ex.Message;
                 return View(member);
             }
+        }
+
+        private IEnumerable<SelectListItem> GetCountryList()
+        {
+            string path = @"countries.json";
+            var data = System.IO.File.ReadAllText(path);
+            var countries = JsonSerializer.Deserialize<Dictionary<string, string>>(data);
+            return countries
+                ?.Values
+                ?.OrderBy(country => country)
+                ?.Select(country => new SelectListItem(country, country))
+                ?? new List<SelectListItem>(0);
         }
     }
 }
