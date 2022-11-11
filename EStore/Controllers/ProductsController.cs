@@ -65,6 +65,7 @@ namespace EStore.Controllers
         // GET: ProductsController/Create
         public ActionResult Create()
         {
+            ViewBag.CategoryId = GetCategoryIdList();
             return View();
         }
 
@@ -81,6 +82,7 @@ namespace EStore.Controllers
             }
             catch (Exception ex)
             {
+                ViewBag.CategoryId = GetCategoryIdList();
                 ViewBag.Message = ex.Message;
                 return View(product);
             }
@@ -92,6 +94,8 @@ namespace EStore.Controllers
             var product = productRepository.GetById(id);
             if (product == null)
                 return NotFound();
+
+            ViewBag.CategoryId = GetCategoryIdList();
             return View(product);
         }
 
@@ -112,6 +116,7 @@ namespace EStore.Controllers
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
+                ViewBag.CategoryId = GetCategoryIdList();
                 return View(product);
             }
         }
@@ -140,6 +145,17 @@ namespace EStore.Controllers
                 ViewBag.Message = ex.Message;
                 return View(product);
             }
+        }
+
+        private IEnumerable<SelectListItem> GetCategoryIdList()
+        {
+            int n = 10;
+            var list = new List<SelectListItem>(n);
+            for (int i = 1; i <= n; i++)
+            {
+                list.Add(new SelectListItem(i.ToString(), i.ToString()));
+            }
+            return list;
         }
     }
 }
