@@ -70,7 +70,10 @@ namespace DataAccess
         public IEnumerable<Order> GetByMemberId(int id)
         {
             using var context = new FStoreContext();
-            return context.Orders.Where(o => o.MemberId == id).ToList();
+            return context.Orders
+                .Include(i => i.Member)
+                .Where(o => o.MemberId == id)
+                .ToList();
         }
     }
 }
