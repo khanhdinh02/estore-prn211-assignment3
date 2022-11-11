@@ -4,6 +4,10 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<FStoreContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FStore")));
+builder.Services.AddScoped(typeof(FStoreContext));
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

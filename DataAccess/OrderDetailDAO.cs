@@ -81,7 +81,7 @@ namespace DataAccess
             return context.OrderDetails
                 .Include(d => d.Order)
                 .Include(d => d.Product)
-                .Where(d => from.CompareTo(d.Order.OrderDate) <= 0 && d.Order.OrderDate.CompareTo(to) <= 0)
+                .Where(d => from.Date.CompareTo(d.Order.OrderDate.Date) <= 0 && d.Order.OrderDate.Date.CompareTo(to.Date) <= 0)
                 .ToList();
         }
 

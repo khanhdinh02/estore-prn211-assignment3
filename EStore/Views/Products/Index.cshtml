@@ -10,6 +10,18 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<div class="row">
+    <form asp-action="Index" method="get" class="col-sm-6 d-flex justify-content-start">
+        <input name="name" type="text" placeholder="Product name" value="@ViewBag.SearchName" />
+        <input type="submit" value="Search" />
+    </form>
+    <form asp-action="Index" method="get" class="col-sm-6 d-flex justify-content-end">
+        <select name="price" asp-items="@ViewBag.PriceRanges"></select>
+        <input type="submit" value="Search" />
+    </form>
+</div>
+
 <table class="table">
     <thead>
         <tr>

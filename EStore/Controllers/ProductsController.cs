@@ -2,6 +2,7 @@
 using DataAccess.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EStore.Controllers
 {
@@ -10,9 +11,46 @@ namespace EStore.Controllers
         IProductRepository productRepository = new ProductRepository();
 
         // GET: ProductsController
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    return View(productRepository.GetAll());
+        //}
+
+        public ActionResult Index(string? name, int? price)
         {
-            return View(productRepository.GetAll());
+            SelectListItem[] priceRanges =
+            {
+                new SelectListItem("All", "0"),
+                new SelectListItem("0 - 999,999", "1"),
+                new SelectListItem("1,000,000 - 9,999,999", "2"),
+                new SelectListItem("10,000,000 -", "3")
+            };
+            ViewBag.PriceRanges = priceRanges;
+
+            IEnumerable<Product> products = productRepository.GetAll();
+            if (name != null)
+            {
+                ViewBag.SearchName = name;
+                return View(products.Where(p => p.ProductName
+                    .Contains(name, StringComparison.OrdinalIgnoreCase)));
+            }
+
+            if (price != null)
+            {
+                priceRanges[price.Value].Selected = true;
+                return View(products.Where(p =>
+                {
+                    return price.Value switch
+                    {
+                        1 => p.UnitPrice < 1_000_000,
+                        2 => 1_000_000 <= p.UnitPrice && p.UnitPrice < 10_000_000,
+                        3 => 10_000_000 <= p.UnitPrice,
+                        _ => true,
+                    };
+                }));
+            }
+
+            return View(products);
         }
 
         // GET: ProductsController/Details/5

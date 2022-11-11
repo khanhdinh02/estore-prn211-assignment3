@@ -10,6 +10,7 @@ namespace EStore.Controllers
     {
         IOrderRepository orderRepository = new OrderRepository();
         IMemberRepository memberRepository = new MemberRepository();
+        IOrderDetailRepository orderDetailRepository = new OrderDetailRepository();
 
         // GET: OrdersController
         public ActionResult Index()
@@ -110,6 +111,29 @@ namespace EStore.Controllers
                 ViewBag.Message = ex.Message;
                 return View(order);
             }
+        }
+
+        public ActionResult Report(DateTime? from, DateTime? to)
+        {
+            if (from == null || to == null)
+                return View();
+
+            DateTime fromDate = from.Value;
+            DateTime toDate = to.Value;
+
+            IEnumerable<Order> orders = orderRepository.GetAll()
+                .Where(o => fromDate.Date.CompareTo(o.OrderDate.Date) <= 0 && o.OrderDate.Date.CompareTo(toDate.Date) <= 0)
+                .OrderByDescending(o => o.OrderDate);
+            IEnumerable<OrderDetail> details = orderDetailRepository.GetBetweenDays(fromDate, toDate);
+
+            ViewBag.Orders = orders.Count();
+            ViewBag.SoldProducts = details.Sum(d => d.Quantity);
+            ViewBag.Customers = orders.DistinctBy(o => o.MemberId).Count();
+            ViewBag.Turnover = details.Sum(d => d.UnitPrice * d.Quantity);
+
+            ViewBag.From = fromDate.ToString("yyyy-MM-dd");
+            ViewBag.To = toDate.ToString("yyyy-MM-dd");
+            return View(orders);
         }
 
         private IEnumerable<SelectListItem> GetMemberList()
